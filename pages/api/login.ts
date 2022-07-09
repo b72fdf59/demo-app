@@ -16,8 +16,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   if (username === "usergood") {
     const randomUserId = ulid();
-    res.status(200).send(randomUserId);
+    res.status(200).json({ message: randomUserId });
   } else {
-    res.status(200).send(username);
+    res.status(200).json({ message: username });
   }
 }
