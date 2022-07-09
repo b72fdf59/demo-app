@@ -10,6 +10,11 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
   },
+  logo: {
+    position: "relative",
+    width: "30%",
+    paddingBottom: "20%",
+  },
 };
 
 type Props = {
@@ -25,12 +30,16 @@ export default function Logo({
 }: Props): JSX.Element {
   return (
     <Box sx={styles.header}>
-      <Image src={src} width={300} height={200} alt="Logo image" />
+      <Box sx={styles.logo}>
+        <Image src={src} layout="fill" alt="Logo image" objectFit="contain" />
+      </Box>
       <Box>
-        <Typography variant="h6" component="h6">
+        <Typography gutterBottom variant="h6" component="h6">
           {title}
         </Typography>
-        <Typography variant="body1">{subTitle}</Typography>
+        <Typography gutterBottom variant="body1">
+          {subTitle}
+        </Typography>
       </Box>
     </Box>
   );

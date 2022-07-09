@@ -43,12 +43,18 @@ const Login: NextPage = () => {
         />
         <TextField
           id="password"
-          label="User ID"
+          label="Password"
           type="password"
           variant="outlined"
           sx={styles.textField}
         />
-        <Button fullWidth variant="contained" color="primary" type="submit">
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          size="large"
+          type="submit"
+        >
           Login
         </Button>
       </Root>
