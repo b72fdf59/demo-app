@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
-import { ulid } from "ulid";
+import { getSignedToken } from "../../lib/token";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { username, password } = req.body;
@@ -14,10 +14,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       .json({ message: "Username or password name not found" });
   }
 
-  if (username === "usergood") {
-    const randomUserId = ulid();
-    res.status(200).json({ message: randomUserId });
-  } else {
-    res.status(200).json({ message: username });
-  }
+  const accessToken = getSignedToken(username);
+  res.status(200).json(accessToken);
 }
