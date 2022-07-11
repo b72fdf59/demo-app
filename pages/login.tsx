@@ -41,7 +41,10 @@ const Login: NextPage = () => {
       body: JSONdata,
     };
     const response = await fetch("/api/login", options);
-    console.log(await response.json());
+    const respJSON = await response.json();
+
+    // Store response in local storage
+    localStorage.setItem("token", respJSON.accessToken);
   });
 
   return (
