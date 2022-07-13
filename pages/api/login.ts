@@ -4,9 +4,6 @@ import { getSignedToken } from "../../lib/token";
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { username, password } = req.body;
 
-  // Optional logging to see the responses
-  console.log("body: ", username, password);
-
   if (!username || !password) {
     // Sends a HTTP bad request error code
     return res

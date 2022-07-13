@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import { Controller, useForm } from "react-hook-form";
 
@@ -28,6 +29,7 @@ const styles = {
 };
 
 const Login: NextPage = () => {
+  const router = useRouter();
   const { control, handleSubmit } =
     useForm<{ username: string; password: string }>();
 
@@ -45,6 +47,7 @@ const Login: NextPage = () => {
 
     // Store response in local storage
     localStorage.setItem("token", respJSON.accessToken);
+    router.push("/home");
   });
 
   return (

@@ -1,4 +1,3 @@
-import "dotenv/config";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { ulid } from "ulid";
 
