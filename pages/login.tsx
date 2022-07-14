@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import getConfig from "next/config";
 import Head from "next/head";
 
 import { Controller, useForm } from "react-hook-form";
@@ -10,6 +9,7 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 
 import Logo from "../components/logo";
+import { JWTTokenKey } from "../utils/constants";
 
 const styles = {
   textField: {
@@ -31,7 +31,6 @@ const styles = {
 
 const Login: NextPage = () => {
   const router = useRouter();
-  const { publicRuntimeConfig } = getConfig();
   const { control, handleSubmit } =
     useForm<{ username: string; password: string }>();
 
@@ -48,12 +47,7 @@ const Login: NextPage = () => {
     const respJSON = await response.json();
 
     // Store response in local storage
-    if (typeof publicRuntimeConfig.jwtTokenKey === "string") {
-      localStorage.setItem(
-        publicRuntimeConfig.jwtTokenKey,
-        respJSON.accessToken
-      );
-    }
+    localStorage.setItem(JWTTokenKey, respJSON.accessToken);
     router.push("/home");
   });
 
