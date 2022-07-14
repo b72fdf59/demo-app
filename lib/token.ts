@@ -28,6 +28,7 @@ export const verifyToken = (token: string): string | JwtPayload => {
     var decoded = jwt.verify(token, secret);
     return decoded;
   } catch (err) {
+    console.log(err);
     throw new Error("INVALID TOKEN EROR");
   }
 };
