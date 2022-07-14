@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import type { AppProps } from "next/app";
-import getConfig from "next/config";
 import { useRouter } from "next/router";
 
 import { ThemeProvider } from "@mui/material/styles";
@@ -11,47 +10,47 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { theme } from "../theme";
 import "../styles/globals.css";
 import { checkToken } from "../utils/api/token";
+import { JWTTokenKey } from "../utils/constants";
 
-const privatePages = ["/user"];
+const publicPages = ["/login"];
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const { publicRuntimeConfig } = getConfig();
   const [queryClient] = useState(() => new QueryClient());
   const [authorized, setAuthorized] = useState(false);
 
   const authCheck = async (url: string) => {
-    const path = url.split("/")[0];
+    if (publicPages.includes(url)) {
+      setAuthorized(true);
+      return;
+    }
+    const token = localStorage.getItem(JWTTokenKey);
+    if (token === null) {
+      setAuthorized(false);
+      router.push("/login");
+      return;
+    }
+
     try {
-      if (privatePages.includes(path)) {
-        if (typeof publicRuntimeConfig.jwtTokenKey === "string") {
-          const token = localStorage.get(publicRuntimeConfig.jwtTokenKey);
-          const queryFn = () => checkToken(token);
-          const resp = await queryClient.fetchQuery("authenticate", queryFn);
-          console.log(resp);
-          setAuthorized(true);
-          return;
-        }
-      }
+      const resp = await queryClient.fetchQuery("authenticate", () =>
+        checkToken(token)
+      );
+      console.log(resp);
+      setAuthorized(true);
     } catch (err) {
       console.log(err);
+      router.push("/login");
     }
-    setAuthorized(false);
-    router.push("/login");
   };
 
   useEffect(() => {
-    // run auth check on initial load
     authCheck(router.asPath);
 
-    // set authorized to false to hide page content while changing routes
     const hideContent = () => setAuthorized(false);
     router.events.on("routeChangeStart", hideContent);
 
-    // run auth check on route change
     router.events.on("routeChangeComplete", authCheck);
 
-    // unsubscribe from events in useEffect return function
     return () => {
       router.events.off("routeChangeStart", hideContent);
       router.events.off("routeChangeComplete", authCheck);
@@ -62,7 +61,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
-        {authorized ? <Component {...pageProps} /> : <h1>Not Authed</h1>}
+        {authorized && <Component {...pageProps} />}
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ThemeProvider>
