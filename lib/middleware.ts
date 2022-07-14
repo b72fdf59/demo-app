@@ -17,8 +17,8 @@ export const authMiddleware = (
       console.log("Decoded " + user);
       await handler(req, res);
     } catch (err) {
-      console.error("Error while verifying token");
-      return res.redirect("/login");
+      console.error("Error while verifying token", err);
+      return res.redirect("/toast");
     }
   };
 };
