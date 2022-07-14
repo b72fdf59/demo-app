@@ -18,6 +18,7 @@ export const authMiddleware = (
       await handler(req, res);
     } catch (err) {
       console.error("Error while verifying token");
+      return res.redirect("/login");
     }
   };
 };
